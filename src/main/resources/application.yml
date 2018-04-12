@@ -1,0 +1,24 @@
+server:
+  port: 8087
+
+spring:
+    mvc:
+        view:
+          prefix: /templates/
+          suffix: .html
+    thymeleaf:
+       cache: false
+       enabled: true
+       encoding: UTF-8
+    servlet:
+      multipart:
+        enabled: true
+        max-file-size: 3024MB
+        max-request-size: 3024MB
+
+
+logging:
+  level:
+    root: info
+    org.springframework.web: info
+    com.blospace: debug

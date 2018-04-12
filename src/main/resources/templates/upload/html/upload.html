@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content="ThemeBucket"/>
+    <title>IPFS-upload</title>
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="/lib/bootstrap-4.1.0/css/bootstrap.min.css" >
+
+    <link href="/css/upload.css" rel="stylesheet"/>
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico"/>
+
+</head>
+<body>
+<header>
+    <div class="navbar navbar-dark bg-dark box-shadow">
+        <div class="container d-flex justify-content-between">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                <img src="/image/logo_02.png" style="height: 35px">
+            </a>
+        </div>
+    </div>
+</header>
+<main role="main" style="margin-top: 20px">
+    <section class="container" style="margin-bottom: 20px">
+        <h3>文件上传</h3>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">选择文件</span>
+            </div>
+            <input id="uploadFileInput" type="file" class="form-control" aria-label="选择文件">
+            <div class="input-group-append">
+                <span class="input-group-text">密码</span>
+            </div>
+            <input id="password" type="password" class="form-control">
+        </div>
+        <div id="uploadFileProgressBar" class="progress" style="display: none">
+            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0</div>
+        </div>
+        <div id="errorInfo" class="alert alert-danger" role="alert" style="display: none">
+
+        </div>
+        <div class="mb-3" style="text-align: center; margin-top: 20px">
+            <input type="submit" id="uploadFile" class="btn btn-primary " value="上传文件" style="margin-right: 3rem" />
+            <button id="cancel" type="button" class="btn btn-danger">取消</button>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">hash码</span>
+            </div>
+            <input id="hashValue" type="text" class="form-control" placeholder="上传文件后产生hash码" >
+        </div>
+    </section>
+    <section class="container">
+        <h3>资源获取</h3>
+        <div  class="input-group mb-3 generate-qr-code-container">
+            <div class="input-group-prepend">
+                <span class="input-group-text">文件二维码</span>
+            </div>
+            <input id="getQRCodeHash" type="text" class="form-control" placeholder="hash值">
+            <div class="input-group-prepend">
+                <span class="input-group-text">数量</span>
+            </div>
+            <input id="QRCodeNumber" type="text" class="form-control" placeholder="数量">
+        </div>
+        <div  class="input-group mb-3 generate-qr-code-container">
+            <div class="input-group-append">
+                <span class="input-group-text">密码</span>
+            </div>
+            <input id="getQRCodePassword" type="password" class="form-control">
+            <input id="generateQRCode" type="button" class="btn btn-primary" value="生成">
+        </div>
+        <div id="qrCodeError" class="alert alert-danger" role="alert"  style="display: none">
+
+        </div>
+    </section>
+</main>
+<div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">资源二维码</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button id="downLoad" type="button" class="btn btn-primary">导出</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+</script>
+
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+<script src="/lib/jquery/jquery-3.3.1.min.js" ></script>
+<script src="/lib/bootstrap-4.1.0/js/bootstrap.min.js" ></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>-->
+<script type="text/javascript" src="/lib/fileupload/plupload-master/js/plupload.full.min.js"></script>
+<script type="text/javascript" src="/js/utils.js"></script>
+<script type="text/javascript" src="/js/upload.js"></script>
+</body>
+</html>
