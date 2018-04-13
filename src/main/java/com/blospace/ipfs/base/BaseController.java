@@ -1,8 +1,10 @@
 package com.blospace.ipfs.base;
 
+import com.blospace.ipfs.config.IpfsConfig;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,6 +21,8 @@ import java.util.Map;
 public abstract class BaseController implements ServletContextAware {
 	protected transient final Logger logger = LoggerFactory.getLogger(getClass());
 
+	@Autowired
+	private IpfsConfig ipfsConfig;
     private String servletRealPath;
     private String servletContextPath;
 	private ServletContext servletContext;
@@ -28,6 +32,7 @@ public abstract class BaseController implements ServletContextAware {
 		this.servletContext = servletContext;
         this.servletRealPath = servletContext.getRealPath("/");
         this.servletContextPath = servletContext.getContextPath();
+		this.ipfsConfig.setContextRealPath(this.servletRealPath);
 	}
 	
 	/**
@@ -64,7 +69,15 @@ public abstract class BaseController implements ServletContextAware {
         this.servletRealPath = servletRealPath;
     }
 
-    public ModelAndView go2errorPage(String errorMsg, ModelAndView result){
+	public IpfsConfig getIpfsConfig() {
+		return ipfsConfig;
+	}
+
+	public void setIpfsConfig(IpfsConfig ipfsConfig) {
+		this.ipfsConfig = ipfsConfig;
+	}
+
+	public ModelAndView go2errorPage(String errorMsg, ModelAndView result){
 
         result = result != null ? result : new ModelAndView();
         result.addObject("serverPath", getServletContextPath());

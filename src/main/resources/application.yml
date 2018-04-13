@@ -22,3 +22,9 @@ logging:
     root: info
     org.springframework.web: info
     com.blospace: debug
+
+com:
+  blospace:
+      config:
+          filePath: upload_data
+          fileName: data.json

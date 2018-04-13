@@ -1,5 +1,7 @@
 $(function () {
     initClickEvent();
+    // testSaveData();
+    testUploadData();
 });
 
 function initClickEvent() {
@@ -148,7 +150,7 @@ function generateQRCode(parameter) {
             var qrCodeList = data.data.qrCodeList;
 
             for (var i = 0, len = qrCodeList.length; i < len; i++) {
-                htmlArr.push(imgTpl.replace('${imagePath}', getPath() + qrCodeList[i]).replace("${hash}", data.data.hash))
+                htmlArr.push(imgTpl.replace('${imagePath}', getPath() + "/" + qrCodeList[i]).replace("${hash}", data.data.hash))
             }
             $qrCodeModal.find(".modal-body").html(htmlArr.join(""));
             $qrCodeModal.modal({show: true})
@@ -160,4 +162,16 @@ function generateQRCode(parameter) {
 
 function showQRCodeError(message) {
     $('#qrCodeError').html(message).show("slow")
+}
+
+function testSaveData() {
+    $.post(getPath() + "/ipfs/api/save/dsadss21212121", function (data) {
+        console.log(data);
+    })
+}
+
+function testUploadData() {
+    $.post(getPath() + "/ipfs/api/upload-test", function (data) {
+        console.log(data);
+    })
 }

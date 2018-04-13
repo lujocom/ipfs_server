@@ -1,6 +1,8 @@
 package com.blospace.ipfs.controller;
 
 import com.blospace.ipfs.base.BaseController;
+import com.blospace.ipfs.config.IpfsConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +25,15 @@ import java.util.regex.Pattern;
  * @author LuoHui
  */
 @Controller
-public class PageController extends BaseController{
+public class PageController extends BaseController {
 
+    @Autowired
+    private IpfsConfig ipfsConfig;
 
     @GetMapping("/upload")
-    public String uploadPage(){
+    public String uploadPage() {
+        logger.debug("saveFilePath:{}", ipfsConfig.getFilePath() + ipfsConfig.getFileName());
+
         return "upload/html/upload";
     }
 
@@ -99,12 +105,6 @@ public class PageController extends BaseController{
         }
         return ip;
     }
-
-
-
-
-
-
 
 
 }
