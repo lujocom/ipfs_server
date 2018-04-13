@@ -37,9 +37,6 @@ public class IpfsController extends BaseController {
     @Autowired
     private JsonToFileUtil jsonToFileUtil;
 
-    /*@Autowired
-    private FileUpload fileUpload;*/
-
     @RequestMapping("/api/save/{hashValue}")
     public RtnJson saveJsonData(@PathVariable String hashValue) {
         logger.debug("getUploadData:{}", jsonToFileUtil.getData(this.getIpfsConfig(), hashValue));
