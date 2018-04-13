@@ -17,6 +17,8 @@ public class UploadFileVo {
 
     private String hashValue;
 
+    private String fileName;
+
     private String password;
 
     private List<String> resourceUrlList;
@@ -24,6 +26,14 @@ public class UploadFileVo {
     private List<String> qrCodeRealPath;
 
     private List<String> qrCodeAbsolutePathList;
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public String getPassword() {
         return password;

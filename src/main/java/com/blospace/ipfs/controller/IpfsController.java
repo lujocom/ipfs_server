@@ -2,6 +2,7 @@ package com.blospace.ipfs.controller;
 
 import com.blospace.ipfs.base.BaseController;
 import com.blospace.ipfs.dto.UploadFileVo;
+import com.blospace.ipfs.service.IpfsService;
 import com.blospace.ipfs.util.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +35,8 @@ import java.util.Map;
 @RequestMapping("/ipfs")
 public class IpfsController extends BaseController {
 
+    @Autowired
+    private IpfsService ipfsService;
 
     @Autowired
     private JsonToFileUtil jsonToFileUtil;
@@ -57,34 +61,37 @@ public class IpfsController extends BaseController {
             , HttpServletRequest request, HttpServletResponse response) {
 
         logger.debug("Link uploadDishImg start");
-        String resourceUrl = "dsadsadsa";
+        String resourceUrl = "";
 
         logger.info("-----文件大小:{}----- ", file.getSize());
         logger.info("-----文件类型:{}-----", file.getContentType());
         logger.info("-----表单名称:{}-----", file.getName());
         logger.info("-----文件原名:{}-----", file.getOriginalFilename());
 
+        String hashValue = "";
+
         if (file.getSize() > 0) {
-            String uploadPath = this.getServletRealPath() + "uploadFile" + File.separator;
-            File uploadFilePath = new File(uploadPath);
-            if (!uploadFilePath.exists()) {
-                uploadFilePath.mkdirs();
-            }
-            logger.debug("upload file path:{}", uploadPath);
             try {
+                hashValue = ipfsService.uploadFile2IPFS(file, password);
+                /*String uploadPath = this.getServletRealPath() + "file" + File.separator;
+                File uploadFilePath = new File(uploadPath);
+                if (!uploadFilePath.exists()) {
+                    uploadFilePath.mkdirs();
+                }
+                logger.debug("upload file path:{}", uploadPath);
                 FileUtils.copyInputStreamToFile(file.getInputStream(),
-                        new File(uploadPath, file.getOriginalFilename()));
+                        new File(uploadPath, file.getOriginalFilename()));*/
             } catch (Exception e) {
                 return RtnJsonUtil.error("上传失败....");
             }
         }
         Map<String, Object> resultData = Maps.newHashMap();
-        String hashValue = "dasdadasdsacdsadas";
         resultData.put("hashValue", hashValue);
 
 //        保存上传记录
         UploadFileVo saveInfo = new UploadFileVo();
         saveInfo.setPassword(password);
+        saveInfo.setFileName(file.getName());
         saveInfo.setHashValue(hashValue);
         saveInfo.setResourceUrlList(Lists.newArrayList(resourceUrl));
         jsonToFileUtil.saveData(this.getIpfsConfig(), saveInfo);
@@ -104,8 +111,23 @@ public class IpfsController extends BaseController {
             return RtnJsonUtil.error("此hash码对应的资源密码错误");
         }
 
-        String qrUrl = "";
-        String url = this.getServletContextPath() + "/qrcode/";
+        String uploadPath = this.getServletRealPath() + this.getIpfsConfig().getResourcePath() + File.separator;
+        File uploadFilePath = new File(uploadPath);
+        if (!uploadFilePath.exists()) {
+            uploadFilePath.mkdirs();
+        }
+        String fileName = System.currentTimeMillis() + saveInfo.getFileName().substring(saveInfo.getFileName().lastIndexOf("."));
+        String url = this.getIpfsConfig().getHostName() + "/ipfs/page/resource/" + fileName;
+        try {
+            uploadPath += fileName;
+            ipfsService.getResourceUrlByHashValue(hashValue, uploadPath, password);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return RtnJsonUtil.error("请求资源失败");
+        }
+
+//        String qrUrl = this.getServletRealPath() + this.getIpfsConfig().getQrTpl();
+        String qrUrl = null;
         String destFileFolder = this.getServletRealPath() + "qrcode" + File.separator + hashValue + File.separator;
         String absoluteFolder = this.getServletContextPath() + "qrcode" + File.separator + hashValue + File.separator;
         String destFileTemplate = "%s.png";
@@ -132,6 +154,8 @@ public class IpfsController extends BaseController {
                 e.printStackTrace();
             }
         }
+        saveInfo.setFileName(fileName);
+        saveInfo.setResourceUrlList(Lists.newArrayList(url));
         saveInfo.setQrCodeAbsolutePathList(qrCodePath);
         saveInfo.setQrCodeRealPath(qrCodeRealPath);
         jsonToFileUtil.saveData(this.getIpfsConfig(), saveInfo);

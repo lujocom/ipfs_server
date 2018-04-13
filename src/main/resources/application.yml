@@ -1,5 +1,5 @@
 server:
-  port: 8087
+  port: 8088
 
 spring:
     mvc:
@@ -16,8 +16,6 @@ spring:
         max-file-size: 301024MB
         max-request-size: 301024MB
 
-
-
 logging:
   level:
     root: info
@@ -29,3 +27,7 @@ com:
       config:
           filePath: upload_data
           fileName: data.json
+          connstr: /ip4/192.168.31.198/tcp/5001
+          hostName: http://192.168.3.5:8088
+          resourcePath: file
+          qrTpl: qr_tpl/cbto_tpl.jpg

@@ -41,7 +41,7 @@ function uploadFile() {
     resetProgressBar();
     formData.append('file', file);
     formData.append('password', $('#password').val());
-    formData.append('name', "上传文件");
+    formData.append('name', file.name);
 
     function onprogress(evt) {
         // 写要实现的内容

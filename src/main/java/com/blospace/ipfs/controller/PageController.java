@@ -2,14 +2,18 @@ package com.blospace.ipfs.controller;
 
 import com.blospace.ipfs.base.BaseController;
 import com.blospace.ipfs.config.IpfsConfig;
+import com.blospace.ipfs.dto.UploadFileVo;
+import com.blospace.ipfs.util.JsonToFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,8 +31,6 @@ import java.util.regex.Pattern;
 @Controller
 public class PageController extends BaseController {
 
-    @Autowired
-    private IpfsConfig ipfsConfig;
 
     @GetMapping("/upload")
     public String uploadPage() {
@@ -41,7 +43,15 @@ public class PageController extends BaseController {
         return "demo";
     }
 
-    @RequestMapping("dicomviewer")
+    @GetMapping("/ipfs/page/resource/{fileName}")
+    public String showResource(@PathVariable String fileName, Model model) {
+        String filePath = this.getIpfsConfig().getHostName() + File.separator
+                + this.getIpfsConfig().getResourcePath() + File.separator + fileName;
+        model.addAttribute("resourceUrl", filePath);
+        return "resource-viewer";
+    }
+
+
     public String dicomviewer(HttpServletRequest request, Model model) {
 
         String userAgent = request.getHeader("USER-AGENT").toLowerCase();

@@ -24,6 +24,14 @@ public class IpfsConfig {
 
     private String contextRealPath;
 
+    private String connstr;
+
+    private String hostName;
+
+    private String resourcePath;
+
+    private String qrTpl;
+
     public String getFilePath() {
         return filePath;
     }
@@ -46,5 +54,37 @@ public class IpfsConfig {
 
     public void setContextRealPath(String contextRealPath) {
         this.contextRealPath = contextRealPath;
+    }
+
+    public String getConnstr() {
+        return connstr;
+    }
+
+    public void setConnstr(String connstr) {
+        this.connstr = connstr;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
+    public String getResourcePath() {
+        return resourcePath;
+    }
+
+    public void setResourcePath(String resourcePath) {
+        this.resourcePath = resourcePath;
+    }
+
+    public String getQrTpl() {
+        return qrTpl;
+    }
+
+    public void setQrTpl(String qrTpl) {
+        this.qrTpl = qrTpl;
     }
 }
