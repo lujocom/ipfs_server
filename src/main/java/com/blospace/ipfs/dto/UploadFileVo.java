@@ -17,11 +17,21 @@ public class UploadFileVo {
 
     private String hashValue;
 
+    private String password;
+
     private List<String> resourceUrlList;
 
     private List<String> qrCodeRealPath;
 
     private List<String> qrCodeAbsolutePathList;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getHashValue() {
         return hashValue;

@@ -32,8 +32,6 @@ public class PageController extends BaseController {
 
     @GetMapping("/upload")
     public String uploadPage() {
-        logger.debug("saveFilePath:{}", ipfsConfig.getFilePath() + ipfsConfig.getFileName());
-
         return "upload/html/upload";
     }
 

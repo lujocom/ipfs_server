@@ -1,6 +1,6 @@
 package com.blospace.ipfs.listener;
 
-import com.blospace.ipfs.progress.Progress;
+import com.blospace.ipfs.dto.Progress;
 import org.apache.commons.fileupload.ProgressListener;
 import org.springframework.stereotype.Component;
 

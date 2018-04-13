@@ -1,23 +1,20 @@
 package com.blospace.ipfs.controller;
 
 import com.blospace.ipfs.base.BaseController;
-import com.blospace.ipfs.config.IpfsConfig;
 import com.blospace.ipfs.dto.UploadFileVo;
 import com.blospace.ipfs.util.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.sf.json.JSONObject;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -45,12 +42,6 @@ public class IpfsController extends BaseController {
 
     @RequestMapping("/api/save/{hashValue}")
     public RtnJson saveJsonData(@PathVariable String hashValue) {
-
-        /*UploadFileVo uploadFileVo = new UploadFileVo();
-        uploadFileVo.setHashValue(hashValue);
-        uploadFileVo.setResourceUrlList(Lists.newArrayList("dsadsa"));
-        uploadFileVo.setQrCodeList(Lists.newArrayList("/qrcode/2121/1.png", "/qrcode/2121/2.png"));
-        jsonToFileUtil.saveData(ipfsConfig, uploadFileVo);*/
         logger.debug("getUploadData:{}", jsonToFileUtil.getData(this.getIpfsConfig(), hashValue));
         return RtnJsonUtil.success();
     }
@@ -64,41 +55,57 @@ public class IpfsController extends BaseController {
         return RtnJsonUtil.success();
     }
 
-    @RequestMapping("/api/upload")
-    public void uploadImg(@RequestParam("file") MultipartFile myfile, @RequestParam("password") String pass,
-                          HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @PostMapping("/api/upload")
+    public RtnJson uploadImg(@RequestParam(name = "file") MultipartFile file, @RequestParam("password") String password, String name
+            , HttpServletRequest request, HttpServletResponse response) {
 
         logger.debug("Link uploadDishImg start");
-        RtnJson result;
-        PrintWriter out;
-        boolean flag = false;
         String resourceUrl = "dsadsadsa";
 
-        if (myfile.getSize() > 0) {
-            String uploadPath = this.getServletRealPath() + "uploadFile/";
-            File file = new File(uploadPath);
-            if (!file.exists()) {
-                file.mkdirs();
+        logger.info("-----文件大小:{}----- ", file.getSize());
+        logger.info("-----文件类型:{}-----", file.getContentType());
+        logger.info("-----表单名称:{}-----", file.getName());
+        logger.info("-----文件原名:{}-----", file.getOriginalFilename());
+
+        if (file.getSize() > 0) {
+            String uploadPath = this.getServletRealPath() + "uploadFile" + File.separator;
+            File uploadFilePath = new File(uploadPath);
+            if (!uploadFilePath.exists()) {
+                uploadFilePath.mkdirs();
             }
             logger.debug("upload file path:{}", uploadPath);
             try {
-                FileUtils.copyInputStreamToFile(myfile.getInputStream(),
-                        new File(uploadPath, myfile.getOriginalFilename()));
-                flag = true;
+                FileUtils.copyInputStreamToFile(file.getInputStream(),
+                        new File(uploadPath, file.getOriginalFilename()));
             } catch (Exception e) {
-
+                return RtnJsonUtil.error("上传失败....");
             }
         }
-        out = response.getWriter();
-        if (flag == true) {
-            out.print("1");
-        } else {
-            out.print("2");
-        }
+        Map<String, Object> resultData = Maps.newHashMap();
+        String hashValue = "dasdadasdsacdsadas";
+        resultData.put("hashValue", hashValue);
+
+//        保存上传记录
+        UploadFileVo saveInfo = new UploadFileVo();
+        saveInfo.setPassword(password);
+        saveInfo.setHashValue(hashValue);
+        saveInfo.setResourceUrlList(Lists.newArrayList(resourceUrl));
+        jsonToFileUtil.saveData(this.getIpfsConfig(), saveInfo);
+
+        return RtnJsonUtil.success(resultData);
     }
 
     @PostMapping("/api/qr-code/{hashValue}")
     public RtnJson showQRCode(@PathVariable String hashValue, Integer number, String password) {
+
+        UploadFileVo saveInfo = jsonToFileUtil.getData(this.getIpfsConfig(), hashValue);
+        if (ObjectUtils.equals(null, saveInfo)) {
+            return RtnJsonUtil.error("此hash码无效");
+        }
+
+        if (!StringUtils.equals(password, saveInfo.getPassword()) && StringUtils.isNotBlank(saveInfo.getPassword())) {
+            return RtnJsonUtil.error("此hash码对应的资源密码错误");
+        }
 
         String qrUrl = "";
         String url = this.getServletContextPath() + "/qrcode/";
@@ -128,8 +135,6 @@ public class IpfsController extends BaseController {
                 e.printStackTrace();
             }
         }
-
-        UploadFileVo saveInfo = jsonToFileUtil.getData(this.getIpfsConfig(), hashValue);
         saveInfo.setQrCodeAbsolutePathList(qrCodePath);
         saveInfo.setQrCodeRealPath(qrCodeRealPath);
         jsonToFileUtil.saveData(this.getIpfsConfig(), saveInfo);
@@ -153,6 +158,5 @@ public class IpfsController extends BaseController {
             DownloadUtils.download(destZipFile, response);
         }
     }
-
 
 }

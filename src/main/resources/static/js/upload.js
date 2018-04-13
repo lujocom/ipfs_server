@@ -1,13 +1,15 @@
 $(function () {
     initClickEvent();
-    // testSaveData();
-    testUploadData();
 });
 
 function initClickEvent() {
-    $('#uploadFile').click(function () {
 
-        UpladFile();
+    $('#file').change(function () {
+        $('#uploadFile').attr('disabled', false);
+    });
+
+    $('#uploadFile').click(function () {
+        uploadFile();
     });
 
     $('#cancel').click(function () {
@@ -31,86 +33,54 @@ function initClickEvent() {
     });
 }
 
-function UpladFile() {
-    var fileObj = $("#uploadFileInput").get(0).files[0]; // js 获取文件对象
-    var $errorInfo = $('#errorInfo');
-    if (!fileObj) {
-        $errorInfo.html("请选择待上传的文件").show('slow');
-        return;
-    }
+function uploadFile() {
+    var formData = new FormData();
+
+    var file = $('#file')[0].files[0];
+
     resetProgressBar();
-    $errorInfo.hide();
-    /*var FileController = getPath() + "/ipfs/api/upload"; // 接收上传文件的后台地址
-    // FormData 对象
-    var form = new FormData();
-    form.append("file", fileObj); // 文件对象
-    form.append("password", $('#password').val()); // 密码
-    // XMLHttpRequest 对象
-    var xhr = new XMLHttpRequest();
-    xhr.open("post", FileController, true);
-    xhr.onload = function () {
-        alert("上传完成");
-        var $progressBar = $("#progressBar");
-        $("#uploadFile").attr('disabled', false);
-        $progressBar.parent().removeClass("active");
-        $progressBar.parent().hide();
-    };
-    xhr.upload.addEventListener("progress", progressFunction, false);
-    xhr.send(form);*/
+    formData.append('file', file);
+    formData.append('password', $('#password').val());
+    formData.append('name', "上传文件");
 
-}
-
-function initImgUpload(imgId) {
-    var uploader = new plupload.Uploader({
-        runtimes: 'html5,flash,silverlight,html4',
-        browse_button: imgId, //
-        url: getPath() + '/ipfs/api/upload?password=' + $('#password').val(),
-        filters: {
-            max_file_size: '3024MB'
-        },
-        init: {
-            PostInit: function () {
-                $('#uploadFile').click(function () {
-                    console.log("212121");
-                    uploader.start();
-                    return false;
-                });
-            },
-            FilesAdded: function (up, files) {
-
-            },
-            UploadProgress: function (up, file) {
-                //	alert("UploadProgress");
-                console.log(up);
-                console.log(file);
-            },
-            UploadComplete: function (up, file, result) {
-            },
-            FileUploaded: function (up, file, result) {
-                alert(result.response);
-                var $progressBar = $("#progressBar");
-                $("#uploadFile").attr('disabled', false);
-                $progressBar.parent().removeClass("active");
-                $progressBar.parent().hide();
-            }
-            ,
-            Error: function (up, err) {
-                console.log("Error #" + err.code + ": " + err.message);
-            }
+    function onprogress(evt) {
+        // 写要实现的内容
+        var progressBar = $("#progressBar");
+        if (evt.lengthComputable) {
+            var completePercent = Math.round(evt.loaded / evt.total * 100);
+            progressBar.width(completePercent + "%");
+            $("#progressBar").html(completePercent + "%");
         }
-    });
-    uploader.init();
-}
-
-function progressFunction(evt) {
-    var progressBar = $("#progressBar");
-    if (evt.lengthComputable) {
-        var completePercent = Math.round(evt.loaded / evt.total * 100) + "%";
-        progressBar.width(completePercent);
-        progressBar.html(completePercent);
-        $("#batchUploadBtn").val("正在上传 " + completePercent);
     }
-};
+
+    var xhr_provider = function () {
+        var xhr = jQuery.ajaxSettings.xhr();
+        if (onprogress && xhr.upload) {
+            xhr.upload.addEventListener('progress', onprogress, false);
+        }
+        return xhr;
+    };
+    $.ajax({
+        url: getPath() + '/ipfs/api/upload',
+        type: 'POST',
+        cache: false,
+        data: formData,
+        processData: false,
+        contentType: false,
+        xhr: xhr_provider,
+        success: function (data) {
+            if (data.returnCode === '000') {
+                alert("上传成功");
+                $('#hashValue').val(data.data.hashValue)
+            }
+            // 进度条隐藏
+            $("#progressBar").parent().hide();
+        },
+        error: function (data) {
+            console.info(data);
+        }
+    })
+}
 
 function resetProgressBar() {
     $('#uploadFileProgressBar').show("slow");
@@ -155,7 +125,7 @@ function generateQRCode(parameter) {
             $qrCodeModal.find(".modal-body").html(htmlArr.join(""));
             $qrCodeModal.modal({show: true})
         } else {
-            $qrCodError.html("生成错误，稍后再试").show()
+            $qrCodError.html(data.returnMsg).show()
         }
     });
 }
