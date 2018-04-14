@@ -31,7 +31,38 @@ function initClickEvent() {
             }
         });
     });
+
+    $('#getResource').click(function () {
+        var parameter = getQECodeParameter();
+        if (!parameter.hashValue) {
+            showQRCodeError("hash值不能为空");
+            return;
+        }
+        $.post(getPath() + '/ipfs/api/resource/' + parameter.hashValue, parameter, function (data) {
+            if (data.returnCode === "000") {
+                var resource = data.data.resourcePath;
+                resource = getPath() + "/" + resource;
+                var html = "";
+
+                if (data.data.showType === 'image') {
+                    html = imageResourceTpl.replace("${resourceUrl}", resource);
+                } else if (data.data.showType === 'video') {
+                    html = videoResourceTpl.replace("${resourceUrl}", resource);
+                }
+                showModal("查看资源", html, true);
+            } else {
+                showQRCodeError(data.returnMsg);
+            }
+        });
+    });
+
+    $('.close-modal').click(function () {
+        $('#qrCodeModal').find('.modal-body').empty();
+    });
 }
+
+var imageResourceTpl = '<div class="text-center"><img src="${resourceUrl}" style="width: 80%;" class="rounded" alt="${hash}"></div>';
+var videoResourceTpl = '<div class="text-center"><video src="${resourceUrl}" style="width: 100%" controls="controls"></video></div>';
 
 function uploadFile() {
     var formData = new FormData();
@@ -87,7 +118,6 @@ function resetProgressBar() {
     $('#progressBar').width('0%');
 }
 
-
 function getQECodeParameter() {
     return {
         "password": $('#getQRCodePassword').val(),
@@ -114,16 +144,13 @@ function generateQRCode(parameter) {
         "number": parameter.qrCodeNum
     }, function (data) {
         console.log(data);
-        var $qrCodeModal = $('#qrCodeModal');
         if (data.returnCode === '000' && !!data.data) {
             var htmlArr = [];
             var qrCodeList = data.data.qrCodeList;
-
             for (var i = 0, len = qrCodeList.length; i < len; i++) {
                 htmlArr.push(imgTpl.replace('${imagePath}', getPath() + "/" + qrCodeList[i]).replace("${hash}", data.data.hash))
             }
-            $qrCodeModal.find(".modal-body").html(htmlArr.join(""));
-            $qrCodeModal.modal({show: true})
+            showModal("资源二维码", htmlArr.join(""), false);
         } else {
             $qrCodError.html(data.returnMsg).show()
         }
@@ -134,14 +161,14 @@ function showQRCodeError(message) {
     $('#qrCodeError').html(message).show("slow")
 }
 
-function testSaveData() {
-    $.post(getPath() + "/ipfs/api/save/dsadss21212121", function (data) {
-        console.log(data);
-    })
-}
-
-function testUploadData() {
-    $.post(getPath() + "/ipfs/api/upload-test", function (data) {
-        console.log(data);
-    })
+function showModal(title, html, hideBtn) {
+    $('#modelTile').html(title);
+    var $qrCodeModal = $('#qrCodeModal');
+    $qrCodeModal.find(".modal-body").html(html);
+    if (hideBtn) {
+        $('#downLoad').hide();
+    } else {
+        $('#downLoad').show();
+    }
+    $qrCodeModal.modal({show: true})
 }

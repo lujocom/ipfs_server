@@ -21,12 +21,9 @@ public class IpfsApplication {
     }
 
     @Bean()
-    public healthwallet_ipfs_api healthwallet_ipfs_api(){
+    public healthwallet_ipfs_api healthwallet_ipfs_api() {
         return new healthwallet_ipfs_api(ipfsConfig.getConnstr());
     }
-
-
-
 
 
 }

@@ -76,7 +76,8 @@
                 <span class="input-group-text">密码</span>
             </div>
             <input id="getQRCodePassword" type="password" class="form-control">
-            <input id="generateQRCode" type="button" class="btn btn-primary" value="生成">
+            <input id="generateQRCode" type="button" class="btn btn-primary" value="生成二维码">
+            <input id="getResource" type="button" class="btn btn-info" value="查看资源">
         </div>
         <div id="qrCodeError" class="alert alert-danger" role="alert" style="display: none">
 
@@ -88,8 +89,8 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">资源二维码</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="modelTile">资源二维码</h5>
+                <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -97,13 +98,14 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">关闭</button>
                 <button id="downLoad" type="button" class="btn btn-primary">导出</button>
             </div>
         </div>
     </div>
 </div>
 <script>
+
 </script>
 
 <script src="/lib/jquery/jquery-3.3.1.min.js"></script>

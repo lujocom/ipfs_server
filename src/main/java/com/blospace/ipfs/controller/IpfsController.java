@@ -38,7 +38,6 @@ public class IpfsController extends BaseController {
 
     @Autowired
     private IpfsService ipfsService;
-
     @Autowired
     private JsonToFileUtil jsonToFileUtil;
 
@@ -99,76 +98,46 @@ public class IpfsController extends BaseController {
         return RtnJsonUtil.success(resultData);
     }
 
+    @PostMapping("/api/resource/{hashValue}")
+    public RtnJson showResource(@PathVariable String hashValue, String password) {
+        Map<String, Object> resultData = Maps.newHashMap();
+
+        UploadFileVo uploadFileVo = null;
+        try {
+            resultData.put("hash", hashValue);
+
+//            uploadFileVo = jsonToFileUtil.getData(this.getIpfsConfig(), hashValue);
+            uploadFileVo = ipfsService.getResourceFromIPFS(hashValue, password, this.getServletRealPath());
+            resultData.put("resourcePath", this.getIpfsConfig().getResourcePath() + "/" + uploadFileVo.getFileName());
+            String fileType = uploadFileVo.getFileName().substring(uploadFileVo.getFileName().lastIndexOf(".")).toLowerCase();
+            String showType = "";
+            if (getIpfsConfig().getImageType().contains(fileType)) {
+                showType = "image";
+            } else if (getIpfsConfig().getVideoType().contains(fileType)) {
+                showType = "video";
+            }
+            resultData.put("showType", showType);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RtnJsonUtil.error("获取资源失败");
+        }
+        return RtnJsonUtil.success(resultData);
+    }
+
     @PostMapping("/api/qr-code/{hashValue}")
     public RtnJson showQRCode(@PathVariable String hashValue, Integer number, String password) {
-
-        UploadFileVo saveInfo = jsonToFileUtil.getData(this.getIpfsConfig(), hashValue);
-        String fileName = System.currentTimeMillis() + "";
-        String fileType = "";
-        if (ObjectUtils.equals(null, saveInfo)) {
-            saveInfo = new UploadFileVo();
-            saveInfo.setHashValue(hashValue);
-            saveInfo.setPassword(password);
-        }
-        String uploadPath = this.getServletRealPath() + this.getIpfsConfig().getResourcePath() + File.separator;
-        File uploadFilePath = new File(uploadPath);
-        if (!uploadFilePath.exists()) {
-            uploadFilePath.mkdirs();
-        }
-        String url = this.getIpfsConfig().getHostName() + "/ipfs/page/resource/";
-        InputStream fileInputStream;
-        try {
-
-            fileInputStream = ipfsService.getResourceUrlByHashValue(hashValue, password);
-            fileType = FileTypeUtil.getFileType(fileInputStream);
-            fileName += "." + fileType;
-            ipfsService.getResourceUrlByHashValue(hashValue, uploadPath + fileName, password);
-            url += fileName;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return RtnJsonUtil.error("请求资源失败");
-        }
-
-        String qrUrl = this.getServletRealPath() + this.getIpfsConfig().getQrTpl();
-        logger.debug("二维码模板路径：{}", qrUrl);
-
-//        String qrUrl = null;
-        String destFileFolder = this.getServletRealPath() + "qrcode" + File.separator + hashValue + File.separator;
-        String absoluteFolder = this.getServletContextPath() + "qrcode" + File.separator + hashValue + File.separator;
-        String destFileTemplate = "%s.png";
-        List<String> qrCodePath = Lists.newArrayList();
-        List<String> qrCodeRealPath = Lists.newArrayList();
-        File tempFile = new File(destFileFolder);
-        if (tempFile.exists()) {
-            File[] files = tempFile.listFiles();
-            for (File file : files)
-                file.delete();
-        }
-        QRCodeUtil.mkdirs(destFileFolder);
-        if (number == 0) {
-            number = 1;
-        }
-        for (int i = 0; i < number; i++) {
-            try {
-                String destFile = String.format(destFileTemplate, i + 1);
-                qrCodePath.add(absoluteFolder + destFile);
-                logger.debug("路径:{}", destFileFolder + destFile);
-                qrCodeRealPath.add(destFileFolder + destFile);
-                QRCodeUtil.encodeByTemplate(url, qrUrl, 2480, 3348, 468, 817, 1554, 1554, null, destFileFolder + destFile, true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        saveInfo.setFileName(fileName);
-        saveInfo.setResourceUrlList(Lists.newArrayList(url));
-        saveInfo.setQrCodeAbsolutePathList(qrCodePath);
-        saveInfo.setQrCodeRealPath(qrCodeRealPath);
-        jsonToFileUtil.saveData(this.getIpfsConfig(), saveInfo);
-
         Map<String, Object> resultData = Maps.newHashMap();
-        resultData.put("hash", hashValue);
-        resultData.put("qrCodeList", qrCodePath);
 
+        UploadFileVo uploadFileVo = null;
+        try {
+            uploadFileVo = ipfsService.getResourceFromIPFS(hashValue, password, this.getServletRealPath());
+            ipfsService.generateQRCode(uploadFileVo, this.getServletRealPath(), this.getServletContextPath(), number);
+            resultData.put("hash", hashValue);
+            resultData.put("qrCodeList", uploadFileVo.getQrCodeAbsolutePathList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RtnJsonUtil.error("获取二维码失败");
+        }
         return RtnJsonUtil.success(resultData);
     }
 
