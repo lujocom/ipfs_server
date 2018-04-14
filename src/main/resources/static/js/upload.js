@@ -96,7 +96,7 @@ function getQECodeParameter() {
     }
 }
 
-var imgTpl = '<img src="${imagePath}" style="width: 150px; height: 150px;" class="rounded" alt="${hash}">';
+var imgTpl = '<img src="${imagePath}" style="width: 150px; height: 200px;" class="rounded" alt="${hash}">';
 
 function generateQRCode(parameter) {
     var $qrCodError = $('#qrCodeError');

@@ -212,12 +212,18 @@ public class QRCodeUtil {
     public static void main(String[] args) throws Exception {
         String text = "http://www.baidu.com";
 //        QRCodeUtil.encode(text, "C:/Users/yind0/Desktop/logo.jpg", "C:/Users/yind0/Desktop", true);
-        
+        String destFile = "/Users/luohui/Desktop/" + new Random().nextInt(99999999) + ".jpg";
+
         // 定义图像buffer         
-        BufferedImage buffImg = new BufferedImage(QRCODE_SIZE, 60,         
-                BufferedImage.TYPE_INT_RGB);     
-        Graphics2D g = buffImg.createGraphics();         
-        // 将图像填充为白色         
+       /* BufferedImage buffImg = new BufferedImage(QRCODE_SIZE, 60,
+                BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = buffImg.createGraphics();*/
+
+//        QRCodeUtil.encodeByTemplate(text, "/Users/luohui/Desktop/cbto_tpl.jpg", 2480, 3508, 760, 1334, 990, 990, null,  destFile, true);
+        QRCodeUtil.encodeByTemplate(text, "/Users/luohui/Desktop/qr_code_tpl/black.png", 2480, 3348, 468, 817, 1554, 1554, null,  destFile, true);
+
+
+       /* // 将图像填充为白色
         g.setColor(Color.WHITE);    
         g.fillRect(0, 0, QRCODE_SIZE, 60);  
         g.setColor(Color.BLACK);    
@@ -225,7 +231,7 @@ public class QRCodeUtil {
         g.drawString("一楼[A1]", 30, 30);
         String file = new Random().nextInt(99999999)+".jpg";
         File outFile =  new File("C:/Users/yind0/Desktop/"+file);
-        ImageIO.write(buffImg, "jpg", outFile);
+        ImageIO.write(buffImg, "jpg", outFile);*/
 //        QRCodeUtil.encode(content, imgPath, destPath, needCompress);
     }
    

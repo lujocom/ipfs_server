@@ -37,7 +37,7 @@ public class IpfsService {
      * @throws IOException
      */
     public void getResourceUrlByHashValue(String hashValue, String localPath, String password) throws IOException {
-        ipfs.GetFileEncrypt(localPath + hashValue, hashValue , password);
+        ipfs.GetFileEncrypt(localPath, hashValue , password);
     }
 
 }

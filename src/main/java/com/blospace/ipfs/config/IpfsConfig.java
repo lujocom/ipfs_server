@@ -32,6 +32,8 @@ public class IpfsConfig {
 
     private String qrTpl;
 
+    private String imageType;
+
     public String getFilePath() {
         return filePath;
     }
@@ -86,5 +88,13 @@ public class IpfsConfig {
 
     public void setQrTpl(String qrTpl) {
         this.qrTpl = qrTpl;
+    }
+
+    public String getImageType() {
+        return imageType;
+    }
+
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
     }
 }

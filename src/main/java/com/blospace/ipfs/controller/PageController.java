@@ -4,6 +4,7 @@ import com.blospace.ipfs.base.BaseController;
 import com.blospace.ipfs.config.IpfsConfig;
 import com.blospace.ipfs.dto.UploadFileVo;
 import com.blospace.ipfs.util.JsonToFileUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,11 +44,17 @@ public class PageController extends BaseController {
         return "demo";
     }
 
+
     @GetMapping("/ipfs/page/resource/{fileName}")
     public String showResource(@PathVariable String fileName, Model model) {
         String filePath = this.getIpfsConfig().getHostName() + File.separator
                 + this.getIpfsConfig().getResourcePath() + File.separator + fileName;
         model.addAttribute("resourceUrl", filePath);
+        String fileType = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+        if (fileName.contains(".")
+                && StringUtils.contains(getIpfsConfig().getImageType(), fileType)) {
+            return "resource-viewer-image";
+        }
         return "resource-viewer";
     }
 

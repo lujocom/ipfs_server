@@ -62,7 +62,9 @@ public class IpfsController extends BaseController {
 
         logger.debug("Link uploadDishImg start");
         String resourceUrl = "";
-
+        UploadFileVo saveInfo = new UploadFileVo();
+        saveInfo.setPassword(password);
+        saveInfo.setFileName(file.getOriginalFilename());
         logger.info("-----文件大小:{}----- ", file.getSize());
         logger.info("-----文件类型:{}-----", file.getContentType());
         logger.info("-----表单名称:{}-----", file.getName());
@@ -89,9 +91,6 @@ public class IpfsController extends BaseController {
         resultData.put("hashValue", hashValue);
 
 //        保存上传记录
-        UploadFileVo saveInfo = new UploadFileVo();
-        saveInfo.setPassword(password);
-        saveInfo.setFileName(file.getName());
         saveInfo.setHashValue(hashValue);
         saveInfo.setResourceUrlList(Lists.newArrayList(resourceUrl));
         jsonToFileUtil.saveData(this.getIpfsConfig(), saveInfo);
@@ -116,7 +115,7 @@ public class IpfsController extends BaseController {
         if (!uploadFilePath.exists()) {
             uploadFilePath.mkdirs();
         }
-        String fileName = System.currentTimeMillis() + saveInfo.getFileName().substring(saveInfo.getFileName().lastIndexOf("."));
+        String fileName = System.currentTimeMillis() + saveInfo.getFileName().substring(saveInfo.getFileName().lastIndexOf(".")).toLowerCase();
         String url = this.getIpfsConfig().getHostName() + "/ipfs/page/resource/" + fileName;
         try {
             uploadPath += fileName;
@@ -126,8 +125,10 @@ public class IpfsController extends BaseController {
             return RtnJsonUtil.error("请求资源失败");
         }
 
-//        String qrUrl = this.getServletRealPath() + this.getIpfsConfig().getQrTpl();
-        String qrUrl = null;
+        String qrUrl = this.getServletRealPath() + this.getIpfsConfig().getQrTpl();
+        logger.debug("二维码模板路径：{}", qrUrl);
+
+//        String qrUrl = null;
         String destFileFolder = this.getServletRealPath() + "qrcode" + File.separator + hashValue + File.separator;
         String absoluteFolder = this.getServletContextPath() + "qrcode" + File.separator + hashValue + File.separator;
         String destFileTemplate = "%s.png";
@@ -149,7 +150,7 @@ public class IpfsController extends BaseController {
                 qrCodePath.add(absoluteFolder + destFile);
                 logger.debug("路径:{}", destFileFolder + destFile);
                 qrCodeRealPath.add(destFileFolder + destFile);
-                QRCodeUtil.encodeByTemplate(url, qrUrl, 2480, 3508, 760, 1334, 990, 990, null, destFileFolder + destFile, true);
+                QRCodeUtil.encodeByTemplate(url, qrUrl, 2480, 3348, 468, 817, 1554, 1554, null, destFileFolder + destFile, true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
