@@ -50,10 +50,13 @@ public class PageController extends BaseController {
         String filePath = this.getIpfsConfig().getHostName() + File.separator
                 + this.getIpfsConfig().getResourcePath() + File.separator + fileName;
         model.addAttribute("resourceUrl", filePath);
-        String fileType = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
-        if (fileName.contains(".")
-                && StringUtils.contains(getIpfsConfig().getImageType(), fileType)) {
-            return "resource-viewer-image";
+        if (fileName.contains(".")) {
+            String fileType = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+            if (getIpfsConfig().getImageType().contains(fileType)) {
+                return "resource-viewer-image";
+            } else if (getIpfsConfig().getVideoType().contains(fileType)) {
+                return "resource-viewer-video";
+            }
         }
         return "resource-viewer";
     }

@@ -21,6 +21,8 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
 //        registry.addResourceHandler("/templates/**/*.css").addResourceLocations("classpath:/templates/");
 //        registry.addResourceHandler("/templates/**/*.jpg").addResourceLocations("classpath:/templates/");
 //        registry.addResourceHandler("/templates/**/*.png").addResourceLocations("classpath:/templates/");
+        registry.addResourceHandler("/src/main/webapp/**").addResourceLocations("classpath:/webapp/");
+
         super.addResourceHandlers(registry);
     }
 }

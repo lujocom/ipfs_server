@@ -28,7 +28,8 @@ com:
           filePath: upload_data
           fileName: data.json
           connstr: /ip4/192.168.31.198/tcp/5001
-          hostName: http://192.168.31.198:8088
+          hostName: http://192.168.31.31:8088
           resourcePath: file
           qrTpl: qr_tpl/cbto_tpl.png
           imageType: .jpg,.png,.jpeg,.bmp,.gif,.webp,.tiff
+          videoType: .mp4,.mp3

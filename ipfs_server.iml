@@ -25,7 +25,6 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="healthwallet-ipfs-api-1.0-SNAPSHOT-jar-with-dependencies" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-thymeleaf:2.0.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.0.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-logging:2.0.1.RELEASE" level="project" />
@@ -105,13 +104,6 @@
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.8.0" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: net.sf.ezmorph:ezmorph:1.0.6" level="project" />
-    <orderEntry type="library" name="Maven: net.coobird:thumbnailator:0.4.8" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-jpeg:3.3" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-core:3.3" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-metadata:3.3" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.common:common-lang:3.3" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.common:common-io:3.3" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.common:common-image:3.3" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-tiff:3.3" level="project" />
+    <orderEntry type="library" name="Maven: cn.iinda:healthwallet-ipfs-api:1.0-SNAPSHOT-jar-with-dependencies" level="project" />
   </component>
 </module>

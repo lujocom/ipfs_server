@@ -34,6 +34,8 @@ public class IpfsConfig {
 
     private String imageType;
 
+    private String videoType;
+
     public String getFilePath() {
         return filePath;
     }
@@ -96,5 +98,13 @@ public class IpfsConfig {
 
     public void setImageType(String imageType) {
         this.imageType = imageType;
+    }
+
+    public String getVideoType() {
+        return videoType;
+    }
+
+    public void setVideoType(String videoType) {
+        this.videoType = videoType;
     }
 }

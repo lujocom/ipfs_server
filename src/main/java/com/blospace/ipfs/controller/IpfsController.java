@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -102,24 +103,27 @@ public class IpfsController extends BaseController {
     public RtnJson showQRCode(@PathVariable String hashValue, Integer number, String password) {
 
         UploadFileVo saveInfo = jsonToFileUtil.getData(this.getIpfsConfig(), hashValue);
+        String fileName = System.currentTimeMillis() + "";
+        String fileType = "";
         if (ObjectUtils.equals(null, saveInfo)) {
-            return RtnJsonUtil.error("此hash码无效");
+            saveInfo = new UploadFileVo();
+            saveInfo.setHashValue(hashValue);
+            saveInfo.setPassword(password);
         }
-
-        if (!StringUtils.equals(password, saveInfo.getPassword()) && StringUtils.isNotBlank(saveInfo.getPassword())) {
-            return RtnJsonUtil.error("此hash码对应的资源密码错误");
-        }
-
         String uploadPath = this.getServletRealPath() + this.getIpfsConfig().getResourcePath() + File.separator;
         File uploadFilePath = new File(uploadPath);
         if (!uploadFilePath.exists()) {
             uploadFilePath.mkdirs();
         }
-        String fileName = System.currentTimeMillis() + saveInfo.getFileName().substring(saveInfo.getFileName().lastIndexOf(".")).toLowerCase();
-        String url = this.getIpfsConfig().getHostName() + "/ipfs/page/resource/" + fileName;
+        String url = this.getIpfsConfig().getHostName() + "/ipfs/page/resource/";
+        InputStream fileInputStream;
         try {
-            uploadPath += fileName;
-            ipfsService.getResourceUrlByHashValue(hashValue, uploadPath, password);
+
+            fileInputStream = ipfsService.getResourceUrlByHashValue(hashValue, password);
+            fileType = FileTypeUtil.getFileType(fileInputStream);
+            fileName += "." + fileType;
+            ipfsService.getResourceUrlByHashValue(hashValue, uploadPath + fileName, password);
+            url += fileName;
         } catch (IOException e) {
             e.printStackTrace();
             return RtnJsonUtil.error("请求资源失败");
