@@ -87,6 +87,7 @@ public class IpfsService {
 
     /**
      * 获取资源
+     *
      * @param hashValue
      * @param password
      * @param realPath
@@ -110,20 +111,21 @@ public class IpfsService {
             logger.debug("hashValue:{}, password:{}-获取资源名称:{}", hashValue, password, fileName);
         }
         File resourceFile = new File(realPath + File.separator + ipfsConfig.getResourcePath() + File.separator + resourceInfo.getFileName());
-        if(!resourceFile.exists()){
+        if (!resourceFile.exists()) {
             logger.debug("本地资源记录中有文件名称但无资源-获取资源-hashValue:{}, password:{}", hashValue, password);
             fileName = this.getResourceUrlByHashValue(hashValue, realPath, password);
             resourceInfo.setFileName(fileName);
             logger.debug("hashValue:{}, password:{}-获取资源名称:{}", hashValue, password, fileName);
         }
 
-        String url = ipfsConfig + "/ipfs/page/resource/" + resourceInfo.getFileName();
+        String url = ipfsConfig.getHostName() + "/ipfs/page/resource/" + resourceInfo.getFileName();
         resourceInfo.setResourceUrlList(Lists.newArrayList(url));
         return resourceInfo;
     }
 
     /**
      * 根据获取资源记录生成二维码
+     *
      * @param resourceInfo
      * @param realPath
      * @param contextPath
