@@ -155,7 +155,7 @@ public class IpfsService {
                 qrCodePath.add(absoluteFolder + destFile);
                 logger.debug("路径:{}", destFileFolder + destFile);
                 qrCodeRealPath.add(destFileFolder + destFile);
-                QRCodeUtil.encodeByTemplate(resourceInfo.getResourceUrlList().get(0), qrUrl, 1200, 1621, 153, 400, 748, 748, null, destFileFolder + destFile, true);
+                QRCodeUtil.encodeByTemplate(resourceInfo.getResourceUrlList().get(0), qrUrl, 1200, 1621, 170, 347, 850, 850, null, destFileFolder + destFile, true);
             } catch (Exception e) {
                 e.printStackTrace();
             }

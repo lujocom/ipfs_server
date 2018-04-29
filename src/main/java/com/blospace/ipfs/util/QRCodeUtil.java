@@ -220,7 +220,7 @@ public class QRCodeUtil {
         Graphics2D g = buffImg.createGraphics();*/
 
 //        QRCodeUtil.encodeByTemplate(text, "/Users/luohui/Desktop/cbto_tpl.jpg", 2480, 3508, 760, 1334, 990, 990, null,  destFile, true);
-        QRCodeUtil.encodeByTemplate(text, "/Users/luohui/Desktop/cbto_tpl.png", 1200, 1621, 153, 400, 748, 748, null,  destFile, true);
+        QRCodeUtil.encodeByTemplate(text, "/Users/luohui/Desktop/cbto_tpl.png", 1200, 1621, 170, 347, 850, 850, null,  destFile, true);
 
 
        /* // 将图像填充为白色
