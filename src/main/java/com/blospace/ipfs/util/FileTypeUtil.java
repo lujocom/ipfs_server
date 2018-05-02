@@ -142,7 +142,6 @@ public class FileTypeUtil {
                     break;
                 }
             }
-            fis.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
